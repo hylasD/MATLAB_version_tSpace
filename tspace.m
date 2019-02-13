@@ -152,16 +152,16 @@ if isempty(parameters.k)
     parameters.k = 20;
 end
 
-graph = input('Enter number of graphs: ');
-if isempty(graph)
-    graph = 5;
-end
-
 parameters.l = input('Enter l number of neighbors (l-kNN): ');
 if isempty(parameters.l)
     L = parameters.k * 0.75;
     L = round(L, 0);
     parameters.l = L;
+end
+
+graph = input('Enter number of graphs: ');
+if isempty(graph)
+    graph = 5;
 end
 
 parameters.num_landmarks = input('Enter number of landmarks : ');
@@ -220,9 +220,8 @@ t_mode = input('For ground truth tSPACE press 1 \n For aproximate tSPACE press 0
 if (t_mode == 1)
     numPop = size(sessionData,1);
     clusters_trajectories = (1:1:size(sessionData,1))';
-else % do kmeans
-    sprintf(strcat('\nNumber of trajectories (default 200): '));
-    numPop = input('\nInput number of trajectories to calculate; \n(recommendation: 100-200)');
+else % do kmeans 
+    numPop = input('\nInput number of trajectories to calculate \n(recommendation 100-200): ');
     if isempty(numPop)
         numPop = 200;
     end
