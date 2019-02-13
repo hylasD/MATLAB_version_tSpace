@@ -233,7 +233,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part that calls trajectory script
-    %separate cells by kMeans/SOM Population
+    %separate cells by kMeans
     indexPops = zeros(numPop, numPop);
     pop = zeros(numPop, 1);
     for i = 1:size(clusters_trajectories,1)
@@ -384,7 +384,7 @@ end
    %creating header for kMeans
     hdrs_rem3 = 'Cluster';
     
-    %creating headers for wPCA
+    %creating headers for tPCA
     for i = 1:size(tScore,2)
         pcaname = sprintf('tPC%d',i);
         pcaname = strcat(pcaname,'_',num2str(round(tExplained(i,1),2)));
@@ -402,7 +402,7 @@ end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %file with only tspacem matrix (trajectories matrix) or tSPACE
-    fileName = matlab.lang.makeValidName(['tsp' datestr(clock, 'mmddyy_HHMM') '_tSPACE_'   parameters.metric 'K' num2str(parameters.k) 'L' num2str(parameters.l) 'G' num2str(graph) 'LM' num2str(parameters.num_landmarks) 'T' Clusters csvname]);
+    fileName = matlab.lang.makeValidName(['tSPACE_'   parameters.metric 'K' num2str(parameters.k) 'L' num2str(parameters.l) 'G' num2str(graph) 'WP' num2str(parameters.num_landmarks) 'T' Clusters csvname]);
     fileName = strcat(fileName, '.csv');
    
     %manipulate headers
@@ -438,7 +438,7 @@ end
         hdrs_rem3 = horzcat(hdrs_rem3, cellstr('Index'));  
     end
 
-    fileNameAll = matlab.lang.makeValidName(['tsp' datestr(clock, 'mmddyy_HHMM') '_PCA_'   parameters.metric 'K' num2str(parameters.k) 'L' num2str(parameters.l) 'G' num2str(graph) 'LM' num2str(parameters.num_landmarks) 'T' Clusters csvname]);
+    fileNameAll = matlab.lang.makeValidName(['PCA_'   parameters.metric 'K' num2str(parameters.k) 'L' num2str(parameters.l) 'G' num2str(graph) 'WP' num2str(parameters.num_landmarks) 'T' Clusters csvname]);
     fileNameAll = strcat(fileNameAll, '.csv');
     fid = fopen(fileNameAll, 'w');
     fprintf(fid, '%s,', hdrs_rem3{1,1:end-1});
@@ -454,7 +454,7 @@ end
     %Plotting PCAs
     scatter3(tScore(:,1), tScore(:,2), tScore(:,3),1,'k')
 
-    plotName = matlab.lang.makeValidName(['tsp' datestr(clock, 'mmdd_HHMM') 'tSPACE_PCA'   parameters.metric 'K' num2str(parameters.k) 'L' num2str(parameters.l) 'G' num2str(graph) 'LM' num2str(parameters.num_landmarks) 'T' Clusters csvname]);
+    plotName = matlab.lang.makeValidName(['tSPACE_PCA'   parameters.metric 'K' num2str(parameters.k) 'L' num2str(parameters.l) 'G' num2str(graph) 'WP' num2str(parameters.num_landmarks) 'T' Clusters csvname]);
     title (plotName);
     
     lx = xlabel(hdrs_rem3(1,2)); % x-axis label
