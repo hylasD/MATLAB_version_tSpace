@@ -40,3 +40,12 @@ tSpace depends on
 Statistics and Machine Learning Toolbox, 
 Parallel Computing Toolbox, 
 Bioinformatics Toolbox
+
+
+# How to use it
+
+Type in command window
+`run tspace.m`
+
+and follow the instructions. 
+Function will export csv files in the working directory, which can be visualized and processed further (see 
