@@ -32,3 +32,11 @@ In our analysis we used Euclidean and Pearson correlation (correlation) metric, 
 
 
 # Installation
+
+Copy src directory and tspace.m file into a tspace directory within your MATALB working directory and add to path directory and subdirectories. 
+
+**Note**: 
+tSpace depends on 
+Statistics and Machine Learning Toolbox, 
+Parallel Computing Toolbox, 
+Bioinformatics Toolbox
