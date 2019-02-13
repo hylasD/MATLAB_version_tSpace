@@ -142,7 +142,7 @@ end
 
 parameters.l = input('Enter l number of neighbors (l-kNN): ');
 if isempty(parameters.l)
-    parameters.l = 12;
+    parameters.l = parameters.k * 0.75;
 end
 
 parameters.num_landmarks = input('Enter number of landmarks : ');
@@ -237,28 +237,14 @@ t_mode = input('For ground truth tSPACE press 1 \n For aproximate tSPACE press 0
 if (t_mode == 1)
     numPop = size(sessionData,1);
     clusters_trajectories = (1:1:size(sessionData,1))';
-else c_mode = input('For Kmeans press 1 \n For SOM press 2: ');
-    if (c_mode == 1)
-        % do kmeans
-        sprintf(strcat('Number of trajectories (Kmeans clusters) must be >=10 but <', num2str(size(sessionData,1)), ', (suggestion: 50 for initial runs)'));
-        numPop = input('Input number of trajectories to calculate (10 or more); \n(recommendation: 20 for fast look, \n100-250 for accuracy), \npre-set 50: ');
-        if isempty(numPop)
-            numPop = 50;
-        end
-        rng(1); % For reproducibility
-        clusters_trajectories = kmeans(sessionData, numPop, 'MaxIter', 10000); % 'Options', options);
-    else 
-        % do SOM, check what parameters are needed for SOM, adjust verbiage to fit SOM
-        sprintf(strcat('Number of trajectories (number of SOM clusters) equals dim1 x dim2,\nplease choose dim1 & dim2 in following steps. \nNumber of total trajectories must be  >=10 but < ', num2str(size(sessionData,1))));
-        dim1 = input('Input number of dimension1: ');
-        dim2 = input('Input number of dimension2: ');
-        numPop = dim1*dim2;
-        rng(1);
-        net = selforgmap([dim1 dim2]);
-        net = train(net,sessionData');
-        y = net(sessionData');
-        clusters_trajectories = vec2ind(y)';
+else % do kmeans
+    sprintf(strcat('Number of trajectories (Kmeans clusters) must be >=10 but <', num2str(size(sessionData,1)), ', (suggestion: 50 for initial runs)'));
+    numPop = input('Input number of trajectories to calculate (10 or more); \n(recommendation: 20 for fast look, \n100-250 for accuracy), \npre-set 50: ');
+    if isempty(numPop)
+        numPop = 50;
     end
+    rng(1); % For reproducibility
+    clusters_trajectories = kmeans(sessionData, numPop, 'MaxIter', 10000); % 'Options', options);
 end
 
 
