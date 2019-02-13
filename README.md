@@ -49,3 +49,7 @@ Type in command window
 
 and follow the instructions. 
 Function will export csv files in the working directory, which can be visualized and processed further, see more [detailed description](http://denisdermadi.com/tspace-trajectory-inference-algorithm).
+
+# tcell_demo
+
+A csv file containing logicle transformed FACS data of 10000 T cells. This file is mean't for testing MATLAB function.
