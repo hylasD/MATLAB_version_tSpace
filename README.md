@@ -4,11 +4,11 @@ By Denis Dermadi
 
 Description
 
-tSpace is the main function for trajectory inference. The algorithm is described in the publication (https://doi.org/10.1101/336313) 
+tSpace is an algorithm for trajectory inference described in the publication (https://doi.org/10.1101/336313).
 
 Originally, it was developed for single cell analysis, however it can be applied on any type of large data.
 
-tSpace is an algorithm for trajectory inference. Depending on the platform used (FACS, CyTOF or single cell (sc) RNAseq) tSpace requires from the user to load previously transformed expression matrix into R workspace. As a general rule, FACS and CyTOF data have to be previously cleaned and pre-processed of all the noise/artifacts, and logicle, log or ashin transformed. scRNAseq data should be normalized, log or square root transformed and scaled. Expression matrix contains cells in the rows, and measured proteins/genes in the columns.
+Here we focus on FACS, CyTOF or single cell (sc) RNAseq data. MATLAB version of tSpace requires previously cleaned data of all the noise/artifacts. Data does not need to be previously transformed. tSpace script provides asinh and logicle transformations for FACS and CyTOF and log+1 transformation and scaling for scRNAseq data. Expression matrix contains cells in the rows, and measured proteins/genes in the columns.
 
 For the first analysis we recommend to use default values, with the exception of waypoints (wp) which for smaller complexity data can be reduced to e.g. here 15. Usually 20 is a good number. MATALB version of tSpace supports for visualization PCA. However, users can visualize trajectory matrix using UMAP in e.g. Python or R.
 
