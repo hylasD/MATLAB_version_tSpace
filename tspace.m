@@ -221,7 +221,7 @@ if (t_mode == 1)
     numPop = size(sessionData,1);
     clusters_trajectories = (1:1:size(sessionData,1))';
 else % do kmeans
-    sprintf(strcat('Number of trajectories (default 200): ));
+    sprintf(strcat('Number of trajectories (default 200): '));
     numPop = input('Input number of trajectories to calculate; \n(recommendation: 100-200');
     if isempty(numPop)
         numPop = 200;
