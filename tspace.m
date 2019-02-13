@@ -62,45 +62,60 @@ for i=1:numel(uexts) %load csv file
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %transform data first, so far arcsin and logicle
-    if (input('To transform data, press 1 \n if you have transformed data, press 0: '))
+    dataType = input('Press \n[1] for CyTOF/FACS Data or \n[2] scRNAseq: ');
+    if (dataType ==1)
+        if (input('To transform data, press 1 \n if you have transformed data, press 0: '))
         transType = input('Press \n[1] for CyTOF Data (arcsinh) or \n[2] FACS Data (logicle, be patient): ');
-        if (transType ==1)
+            if (transType ==1)
             %CyTOF data transformation with arcsin
-           csvdats = asinh(csvdats./5);
-        else
+                csvdats = asinh(csvdats./5);
+            elseif (transType == 2)
             %FACS data transformation with LOGICLE transformation
             %It takes into account minimum value of each channel
-            parfor (p = 1:size(csvdats,2),feature('numCores'))
-                w = (4.5-log10(262144/abs(min(csvdats(:,p)))))/2;
-                if w < 0
+                parfor (p = 1:size(csvdats,2),feature('numCores'))
+                    w = (4.5-log10(262144/abs(min(csvdats(:,p)))))/2;
+                    if w < 0
                         obj = [LogicleTransform(262144,0.5,4.5,0)];
                         csvdats(:,p) = obj.transform(csvdats(:,p));
-                else 
-                    obj = [LogicleTransform(262144,w,4.5,0)];
-                    csvdats(:,p) = obj.transform(csvdats(:,p));
-                end
-            end 
+                    else 
+                        obj = [LogicleTransform(262144,w,4.5,0)];
+                        csvdats(:,p) = obj.transform(csvdats(:,p));
+                    end
+                end 
+            end
         end
-    end
-
-%Selection of markers which will be used for subsequent analysis
-csvdats_rem = csvdats;
-hdrs_rem=hdrs;    
-removed = 0;
-    for j = 1:numel(hdrs)
-        column_name = hdrs{j};
-        prompt = sprintf('Load %s [Y/n]: ', column_name);
-        str = input(prompt, 's');
-        if ~isempty(str) && ~strcmp(str,'y') && ~strcmp(str,'Y')
+        csvdats_rem = csvdats;
+        hdrs_rem=hdrs;    
+        removed = 0;
+        for j = 1:numel(hdrs)
+            column_name = hdrs{j};
+            prompt = sprintf('Load %s [Y/n]: ', column_name);
+            str = input(prompt, 's');
+            if ~isempty(str) && ~strcmp(str,'y') && ~strcmp(str,'Y')
             % mark header as removed
             hdrs{j} = strcat(column_name, '_x');
             % remove
             hdrs_rem(:,j-removed) = [];
             csvdats_rem(:,j-removed) = [];
             removed = removed + 1;
+            end
+        end
+    elseif (dataType == 2)
+        if (input('To transform data, press 1 \n if you have transformed data, press 0: '))
+                csvdats = log10(csvdats+1);
+                scaleType = input('Press \n[1] for centering and scaling \n[2] only scaling usinf root-mean-square: ');
+                if scaleType == 1
+                    %line below is equivavelnt to R function: scale(data, center = T, scale = T))
+                    csvdats = (csvdats - mean(csvdats,1))./std(csvdats,1);
+                elseif scaleType == 2
+                %Scale only by dividing values with root-mean-square equivavelnt to R function: scale(data, center = F, scale = T))
+                    csvdats = csvdats./rms(csvdats,1);
+                end
         end
     end
-    
+        csvdats_rem = csvdats;
+        hdrs_rem=hdrs;    
+
     sessionData = zeros(0, size(csvdats_rem, 2));
     gates = cell(numel(csvdats),4);
 
@@ -123,11 +138,13 @@ numFirstW = size(hdrs_rem, 2) + 1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Trajectory Algorithm Defaults
-i = input('Select distance metric for tspace: [1]cosine (default), [2]euclidean : ');
-if i == 2
+i = input('Select distance metric for tspace: [1]correlation (default), [2]cosine, [3]euclidean : ');
+if i == 3
     parameters.metric = 'euclidean';
+elseif i == 2
+    parameters.metric = 'cosine';
 else
-    parameters.metric = 'cosine'; % default
+    parameters.metric = 'correlation';  % default
 end
 
 parameters.k = input('Enter k number of neighbors (kNN): ');
@@ -142,7 +159,9 @@ end
 
 parameters.l = input('Enter l number of neighbors (l-kNN): ');
 if isempty(parameters.l)
-    parameters.l = parameters.k * 0.75;
+    L = parameters.k * 0.75;
+    L = round(L, 0);
+    parameters.l = L;
 end
 
 parameters.num_landmarks = input('Enter number of landmarks : ');
@@ -188,42 +207,6 @@ parameters.knn = []; % prebuilt on first run lNN graph
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Normalization step
-parameters.normalization = input('Default is [0 = none], additional options[1 = Scaling, 99perc],  [2 = Feature Scaling, min max] or [3 = Standard z-score] :');
-if parameters.normalization == 0
-    parameters.normalization = 'none';
-elseif parameters.normalization == 1
-    parameters.normalization = 'Scaling';
-elseif parameters.normalization == 2
-    parameters.normalization = 'Feature Scaling';
-elseif parameters.normalization == 3
-    parameters.normalization = 'Standard z-score';
-end
-
- if ~isempty(strfind(parameters.normalization, 'Scaling'))
-            % scaling using maximum and minimum values of the data if 'Feature Scaling'
-            if (strcmpi(parameters.normalization, 'Feature Scaling'))
-                top = max(sessionData);
-                bottom = min(sessionData);
-            else
-                % scaling using 99th and 1st percentile of the data with 'Scaling'
-                top = prctile(sessionData, 99, 1);
-                bottom = prctile(sessionData, 1, 1);
-            end
-            sessionData = sessionData-repmat(bottom, size(sessionData,1),1);
-            sessionData(sessionData < 0) = 0;
-            
-            sessionData = sessionData./repmat(top,size(sessionData,1),1);
-            sessionData(sessionData > 1) = 1;  
-            sessionData(isinf(sessionData)) = 0;
-            % z score: 'Standard score'
-        elseif strcmpi(parameters.normalization, 'Standard Score')
-            sessionData = (sessionData-mean(sessionData))./repmat(std(sessionData), size(sessionData,1),1);
-        end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 parameters.exclude_points = [];
 parameters.gates = gates;
 parameters.gate_index = 1;
@@ -238,10 +221,10 @@ if (t_mode == 1)
     numPop = size(sessionData,1);
     clusters_trajectories = (1:1:size(sessionData,1))';
 else % do kmeans
-    sprintf(strcat('Number of trajectories (Kmeans clusters) must be >=10 but <', num2str(size(sessionData,1)), ', (suggestion: 50 for initial runs)'));
-    numPop = input('Input number of trajectories to calculate (10 or more); \n(recommendation: 20 for fast look, \n100-250 for accuracy), \npre-set 50: ');
+    sprintf(strcat('Number of trajectories (default 200): ));
+    numPop = input('Input number of trajectories to calculate; \n(recommendation: 100-200');
     if isempty(numPop)
-        numPop = 50;
+        numPop = 200;
     end
     rng(1); % For reproducibility
     clusters_trajectories = kmeans(sessionData, numPop, 'MaxIter', 10000); % 'Options', options);
