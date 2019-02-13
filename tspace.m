@@ -102,7 +102,7 @@ for i=1:numel(uexts) %load csv file
         end
     elseif (dataType == 2)
         if (input('To transform data, press 1 \n if you have transformed data, press 0: '))
-                csvdats = log10(csvdats+1);
+                csvdats = log2(csvdats+1);
                 scaleType = input('Press \n[1] for centering and scaling \n[2] only scaling usinf root-mean-square: ');
                 if scaleType == 1
                     %line below is equivavelnt to R function: scale(data, center = T, scale = T))
