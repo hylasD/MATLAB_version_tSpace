@@ -1,11 +1,14 @@
 # tSpace algorithm for unsupervised deteremination of multiple developmental branches in single cell data
+
 By Denis Dermadi
 
 Description
 
-tSpace is the main function for trajectory analysis. The algorithm is described in the publication Dermadi et al. 2018 
+tSpace is the main function for trajectory inference. The algorithm is described in the publication (https://doi.org/10.1101/336313) 
 
 Originally, it was developed for single cell analysis, however it can be applied on any type of large data.
+
+
 
 Parameters needed for tSpace:
 
