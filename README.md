@@ -48,4 +48,4 @@ Type in command window
 `run tspace.m`
 
 and follow the instructions. 
-Function will export csv files in the working directory, which can be visualized and processed further (see 
+Function will export csv files in the working directory, which can be visualized and processed further (see more [detials](http://denisdermadi.com/tspace-trajectory-inference-algorithm)
