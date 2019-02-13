@@ -42,7 +42,7 @@ Parallel Computing Toolbox,
 Bioinformatics Toolbox
 
 
-# How to use it
+# How to use the algorithm
 
 Type in command window
 `run tspace.m`
