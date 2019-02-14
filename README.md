@@ -48,4 +48,4 @@ Function will export csv files in the working directory, which can be visualized
 
 # tcell_demo
 
-A csv file containing logicle transformed FACS data of 10000 T cells. This file is mean't for testing MATLAB function.
+A csv file containing logicle transformed FACS data of 10000 T cells. This file is meant for testing MATLAB function.
