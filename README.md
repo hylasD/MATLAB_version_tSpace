@@ -1,4 +1,4 @@
-# tSpace algorithm for unsupervised deteremination of multiple developmental branches in single cell data
+# tSpace algorithm for unsupervised determination of multiple developmental branches in single cell data
 
 By Denis Dermadi
 
