@@ -216,7 +216,7 @@ hdrs_rem2 = hdrs_rem;
 
 %choose ground truth or # of kMeans populations
 time_start1 = tic;
-t_mode = input('For ground truth tSPACE press 1 \n For aproximate tSPACE press 0: ');
+t_mode = input('For ground truth tSPACE press 1 \n For approximate tSPACE press 0: ');
 if (t_mode == 1)
     numPop = size(sessionData,1);
     clusters_trajectories = (1:1:size(sessionData,1))';
