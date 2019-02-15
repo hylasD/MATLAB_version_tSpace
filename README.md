@@ -12,6 +12,31 @@ Here we focus on FACS, CyTOF or single cell (sc) RNAseq data. MATLAB version of 
 
 For the first analysis we recommend to use default values, with the exception of waypoints (wp) which for smaller complexity data can be reduced to e.g. here 15. Usually 20 is a good number. MATALB version of tSpace supports for visualization PCA. However, users can visualize trajectory matrix using UMAP in e.g. Python or R.
 
+# Installation
+
+Copy src directory and tspace.m file into a tspace directory within your MATALB working directory and add to path tspace directory with its subdirectories. 
+
+**Note**: 
+tSpace depends on 
+Statistics and Machine Learning Toolbox, 
+Parallel Computing Toolbox, 
+Bioinformatics Toolbox
+
+# How to use the algorithm
+
+Type in command window
+`run tspace.m`
+
+and follow the instructions. 
+
+%%%%%%%%%
+
+todo: Add description for use instructions 
+
+%%%%%%%%%
+
+Function will export csv files in the working directory, which can be visualized and processed further, see more [detailed description](http://denisdermadi.com/tspace-trajectory-inference-algorithm).
+
 ## Commentary on tSpace parameters
 
 ### Waypoints and number of trajectories
@@ -25,26 +50,6 @@ Furthermore, we compare the effect of the number of sub-graphs, and varying K, L
 ### Comments on metrics
 
 In our analysis we used Euclidean and Pearson correlation (correlation) metric, all commonly used in single cell analysis. Selection of metrics is dependent on the data type. For example, Euclidean distances may over-emphasize the contribution of phenotypic markers that are very highly expressed, unless markers are scaled to a similar range prior to tSpace. Pearson metric intrinsically compensates for this, focusing on the profile shapes rather than magnitudes.
-
-
-# Installation
-
-Copy src directory and tspace.m file into a tspace directory within your MATALB working directory and add to path directory and subdirectories. 
-
-**Note**: 
-tSpace depends on 
-Statistics and Machine Learning Toolbox, 
-Parallel Computing Toolbox, 
-Bioinformatics Toolbox
-
-
-# How to use the algorithm
-
-Type in command window
-`run tspace.m`
-
-and follow the instructions. 
-Function will export csv files in the working directory, which can be visualized and processed further, see more [detailed description](http://denisdermadi.com/tspace-trajectory-inference-algorithm).
 
 # tcell_demo
 
