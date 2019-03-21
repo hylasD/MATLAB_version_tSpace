@@ -395,7 +395,7 @@ end
     %Headrs for tSPACE matrix file
     traj_hdrs = [];
     for i = 1:numPop
-     tname = sprintf('T_%d',i);
+     tname = sprintf('T_%d',indexPops(i,1));
         hdr = cellstr(tname);
         traj_hdrs = horzcat(traj_hdrs, hdr);
     end
